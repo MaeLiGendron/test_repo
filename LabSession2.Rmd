@@ -1,0 +1,63 @@
+---
+title: "labSession2"
+author: "Maé-Li Gendron"
+date: "09/09/2017"
+output: html_document
+---
+
+```{r}
+library(gsheet) 
+mydataset <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1xU5M353ytr2s5ATFt2P9BNRnZQb12iOPYBm3kL6XvoM/edit?usp=sharing")
+# Show first 6 lines of the dataset
+head(mydataset)
+ # Summary of the data set
+summary (mydataset)
+
+# Loading the ggplot2 and the ggthemes libraries
+library(ggplot2)
+library(ggthemes)
+library(gsheet)
+
+# Loading data
+dataGraph <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1Fltf2KbeMSBZGCMfx7wt1l4wNeNjxx2OvMRAZ_4a-nw/edit?usp=sharing")
+
+# Reading the first 10 lines of the dataset
+head(dataGraph, n = 10)
+
+# Bar chart elements
+ggplot(data = dataGraph, aes(x = date, y = value, fill = country)) + 
+  geom_bar(stat = "identity", width = 0.5, position = "dodge")  +  
+  ylab("")  +
+  xlab("") +
+  guides(col = guide_legend(row = 1)) +
+  theme_hc() 
+
+# Loading the ggplot2 and the ggthemes libraries
+library(ggplot2)
+library(ggthemes)
+
+# Line chart elements
+ggplot(data = dataGraph, aes(x = date, y = value, color = country)) +
+  geom_line()  + 
+  ylab("")  +
+  xlab("") +
+  geom_smooth(span = 0.8) +
+  ggtitle("") +
+  theme_hc() +
+  guides(fill=FALSE) +
+  geom_point(colour = "blue", size = 2,shape = 22)
+
+# Loading the ggplot2 and the ggthemes libraries
+library(ggplot2)
+library(ggthemes)
+# Bubble chart elements
+library(ggsci)
+ggplot(data = dataGraph, aes(x = date, y = value, color = country)) +
+  geom_point(aes(size = value)) +
+  scale_size_continuous(range = c(2,15)) +
+  ggtitle("") +
+  theme_hc() +
+  theme(axis.title.x = element_blank()) +
+  guides(fill=FALSE)
+```
+

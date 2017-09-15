@@ -1,0 +1,79 @@
+---
+title: "labSession3"
+author: "Maé-Li Gendron"
+date: "9/15/2017"
+output: html_document
+---
+
+```{r}
+# Loading the gsheet library
+library(gsheet)
+
+# Using the gsheet2tbl function to import data related to cluster from different fields into the RStudio console
+dataCluster <- gsheet2tbl("https://docs.google.com/spreadsheets/d/14nK3iAFdHkb7lW-9ZVFDj2xxpDolOjKJTiOZG7Zhxg8/edit?usp=sharing")
+
+# Add a new column called 'newColumn'
+dataCluster$newColumn <- 42
+
+# Multiply by 2 and add 5
+dataCluster$newColumn <- dataCluster$newColumn * 2 + 5
+
+# Delete the column named 'newColumn'
+dataCluster$newColumn <- NULL
+
+# First 6 lines of the dataset
+head(dataCluster)
+```
+
+```{r}
+# Transformation from character to numerical values
+dataCluster$country <- sapply(dataCluster$country, as.factor)
+dataCluster$year <- sapply(dataCluster$year, as.numeric)
+dataCluster$cluster <- sapply(dataCluster$cluster, as.factor)
+dataCluster$nbEstablishments <- sapply(dataCluster$nbEstablishments, as.numeric)
+dataCluster$employment <- sapply(dataCluster$employment, as.numeric)
+dataCluster$wages <- sapply(dataCluster$wages, as.numeric)
+
+# First 6 lines of the dataset
+summary(dataCluster)
+```
+
+
+```{r}
+# Loading the gsheet library
+library(gsheet)
+
+# Using the gsheet2tbl function to import data related to cluster from different fields into the RStudio console
+dataCluster <- gsheet2tbl("https://docs.google.com/spreadsheets/d/14nK3iAFdHkb7lW-9ZVFDj2xxpDolOjKJTiOZG7Zhxg8/edit?usp=sharing")
+
+head(dataClusterSubset)
+
+# Loading the dplyr library
+library(tidyverse)
+
+# Subset of dataCluster based on cluster == "artificial intelligence" | cluster == "research"
+dataClusterSubset <- filter(dataCluster, cluster == "artificial intelligence" | cluster == "research")
+
+# Number of columns & rows
+dim(dataClusterSubset)
+
+
+# Subset of dataUnido based on countryCode == Canada
+dataClusterSubsetAfter2008 <- filter(dataClusterSubset, year > 2008)
+
+# First lines of the dataframe
+head(dataClusterSubsetAfter2008, n = 8)
+
+# dataSorted will receive the dataframe dataClusterSubsetAfter2008 sorted by the column value
+dataSorted <- arrange(dataClusterSubsetAfter2008, nbEstablishments)
+
+# dataReverse is the opposite of dataClusterSubsetAfter2008, i.e. the first lines will have the highest values
+dataReverse <- arrange(dataClusterSubsetAfter2008, desc(nbEstablishments))
+
+# first 6 lines of dataSorted
+head(dataSorted)
+
+# first 6 lines of dataReverse
+head(dataReverse)
+```
+
