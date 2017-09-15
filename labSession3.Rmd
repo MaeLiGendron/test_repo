@@ -48,32 +48,58 @@ dataCluster <- gsheet2tbl("https://docs.google.com/spreadsheets/d/14nK3iAFdHkb7l
 
 head(dataClusterSubset)
 
-# Loading the dplyr library
-library(tidyverse)
+# Merging 2 datasets
+newData <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1OlMs0uwaDI4AI0gprDYckPpsFaL5k38sULytKHnFZMY/edit?usp=sharing")
 
-# Subset of dataCluster based on cluster == "artificial intelligence" | cluster == "research"
-dataClusterSubset <- filter(dataCluster, cluster == "artificial intelligence" | cluster == "research")
+dataMerged <- bind_rows(dataCluster, newData)
 
-# Number of columns & rows
-dim(dataClusterSubset)
+# loading the new dataset
+patentsClaims <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1h04vYRmhxj4fRhe79dJ0h4e9l2lBbNLkNyaxiSdS5lE/edit?usp=sharing")
 
+# Merging 2 datasets
+dataFull <- full_join(dataMerged, patentsClaims, c("country","year","cluster"))
+```
+```{r}
+# Loading the gsheet library
+library(gsheet)
 
-# Subset of dataUnido based on countryCode == Canada
-dataClusterSubsetAfter2008 <- filter(dataClusterSubset, year > 2008)
+# Using the gsheet2tbl function to import data related to cluster from different fields into the RStudio console
+dataCluster <- gsheet2tbl("https://docs.google.com/spreadsheets/d/14nK3iAFdHkb7lW-9ZVFDj2xxpDolOjKJTiOZG7Zhxg8/edit?usp=sharing")
 
-# First lines of the dataframe
-head(dataClusterSubsetAfter2008, n = 8)
+# Merging 2 datasets
+newData <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1OlMs0uwaDI4AI0gprDYckPpsFaL5k38sULytKHnFZMY/edit?usp=sharing")
 
-# dataSorted will receive the dataframe dataClusterSubsetAfter2008 sorted by the column value
-dataSorted <- arrange(dataClusterSubsetAfter2008, nbEstablishments)
+dataMerged <- bind_rows(dataCluster, newData)
 
-# dataReverse is the opposite of dataClusterSubsetAfter2008, i.e. the first lines will have the highest values
-dataReverse <- arrange(dataClusterSubsetAfter2008, desc(nbEstablishments))
+# loading the new dataset
+patentsClaims <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1h04vYRmhxj4fRhe79dJ0h4e9l2lBbNLkNyaxiSdS5lE/edit?usp=sharing")
 
-# first 6 lines of dataSorted
-head(dataSorted)
+# Merging 2 datasets
+dataFull <- full_join(dataMerged, patentsClaims, c("country","year","cluster"))
 
-# first 6 lines of dataReverse
-head(dataReverse)
+```
+
+```{r}
+# Produce a bar chart concerning the number of establishments
+library(ggplot2)
+library(ggthemes)
+ggplot(data = dataFull, aes(x = year, y = nbEstablishments, fill = cluster)) + 
+  geom_bar(stat = "identity", width = 0.5, position = "dodge")  +  
+  ylab("Number of establishments")  +
+  xlab("") +
+  guides(col = guide_legend(row = 1)) +
+  theme_hc()
+```
+
+```{r}
+# Produce a bar chart concerning the number of employees
+library(ggplot2)
+library(ggthemes)
+ggplot(data = dataFull, aes(x = year, y = employment, fill = cluster)) + 
+  geom_bar(stat = "identity", width = 0.5, position = "dodge")  +  
+  ylab("Number of employees")  +
+  xlab("") +
+  guides(col = guide_legend(row = 1)) +
+  theme_hc()
 ```
 
